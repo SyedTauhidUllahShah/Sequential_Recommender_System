@@ -1,7 +1,7 @@
 import torch
 import numpy as np
 from sasrec_model import SASRec
-from train_sasrec import SequenceDataset
+from train import SequenceDataset
 from torch.utils.data import DataLoader
 
 def evaluate_metrics(predicted_items, actual_items, ks=[5, 10, 20]):
@@ -44,31 +44,13 @@ def evaluate_metrics(predicted_items, actual_items, ks=[5, 10, 20]):
 
     return metrics
 
-if __name__ == '__main__':
-    num_items = 1000
-    hidden_units = 128
-    num_blocks = 2
-    num_heads = 2
-    max_seq_len = 50
-
-    # Load test data
-    test_seqs = np.load('data/processed/test_sequences.npy', allow_pickle=True)
-    test_targets = np.load('data/processed/test_targets.npy', allow_pickle=True)
-
-    test_dataset = SequenceDataset(test_seqs, test_targets)
-    test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False)
-
-    # Load the best model
-    model = SASRec(num_items, hidden_units, num_blocks, num_heads, max_seq_len)
-    model.load_state_dict(torch.load('best_sasrec_model.pth'))
-
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    model.to(device)
-
-    # Evaluate the model
+def evaluate_sasrec(model, test_loader, ks=[5, 10, 20]):
     model.eval()
-    for input_seqs, target_items in test_loader:
-        predicted_items = model(input_seqs).argmax(dim=-1)
-        for predicted, actual in zip(predicted_items, target_items):
-            metrics = evaluate_metrics(predicted.tolist(), actual.tolist(), ks=[5, 10, 20])
-            print(metrics)
+    all_metrics = []
+    with torch.no_grad():
+        for input_seqs, target_items in test_loader:
+            predicted_items = model(input_seqs).argmax(dim=-1)
+            for predicted, actual in zip(predicted_items, target_items):
+                metrics = evaluate_metrics(predicted.tolist(), actual.tolist(), ks)
+                all_metrics.append(metrics)
+    return all_metrics
