@@ -1,4 +1,3 @@
-
 import torch
 import torch.optim as optim
 import numpy as np
@@ -81,4 +80,4 @@ if __name__ == '__main__':
         # Save the model if validation loss improves
         if val_loss < best_val_loss:
             best_val_loss = val_loss
-            torch.save(model.state_dict(), 'models/best_sasrec_model.pth')  # Save the best model
+            torch.save(model.state_dict(), 'best_sasrec_model.pth')  # Save the best model
