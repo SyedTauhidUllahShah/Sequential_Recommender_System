@@ -62,7 +62,7 @@ if __name__ == '__main__':
     # Split the data
     train_seqs, val_seqs, test_seqs, train_targets, val_targets, test_targets = split_data(sequences, targets)
 
-    # Save the processed data
+    # Save the processed data in 'data/processed'
     np.save('data/processed/train_sequences.npy', train_seqs)
     np.save('data/processed/val_sequences.npy', val_seqs)
     np.save('data/processed/test_sequences.npy', test_seqs)
