@@ -1,4 +1,3 @@
-
 import torch
 import numpy as np
 from sasrec_model import SASRec
@@ -6,9 +5,9 @@ from train_sasrec import SequenceDataset
 from torch.utils.data import DataLoader
 
 def evaluate_metrics(predicted_items, actual_items, ks=[5, 10, 20]):
-    '''
+    """
     Evaluate Precision@K, Recall@K, MRR, HR@10, NDCG@10 for different values of K.
-    '''
+    """
     actual_items = set(actual_items)
     metrics = {}
     
@@ -61,7 +60,7 @@ if __name__ == '__main__':
 
     # Load the best model
     model = SASRec(num_items, hidden_units, num_blocks, num_heads, max_seq_len)
-    model.load_state_dict(torch.load('models/best_sasrec_model.pth'))
+    model.load_state_dict(torch.load('best_sasrec_model.pth'))
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model.to(device)
