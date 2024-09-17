@@ -1,1 +1,1 @@
-# Sequential_Recommender_System
+# Sequential Recommender System
